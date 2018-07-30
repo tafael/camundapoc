@@ -4,11 +4,14 @@ import org.apache.logging.log4j.LogManager
 import org.camunda.bpm.engine.RuntimeService
 import org.camunda.bpm.engine.delegate.DelegateExecution
 import org.camunda.bpm.engine.delegate.JavaDelegate
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 
 @Service
 open class SendTask(
-    val runtimeService: RuntimeService
+    val runtimeService: RuntimeService,
+    @Value("\${send.task.enabled:false}")
+    val sendTaskEnabled: Boolean
 ) : JavaDelegate {
 
     companion object {
@@ -17,14 +20,19 @@ open class SendTask(
 
     override fun execute(execution: DelegateExecution) {
         val businessKey = execution.getVariable("businessKey") as String
-        logger.info("SendTask ${businessKey}")
-        try {
-            runtimeService.correlateMessage("Message", businessKey)
-            logger.info("Message sent with SUCCESS")
-        } catch (e: Exception) {
-            logger.info("--- MESSAGE NOT SENT ---")
-            logger.error(e.message)
+        if (sendTaskEnabled) {
+            logger.info("Send Task ${businessKey}")
+            try {
+                runtimeService.correlateMessage("Message", businessKey)
+                logger.info("Message sent with SUCCESS")
+            } catch (e: Exception) {
+                logger.info("--- MESSAGE NOT SENT ---")
+                logger.error(e.message)
+            }
+        } else {
+            logger.info("Send Task disabled.")
         }
+
     }
 }
 

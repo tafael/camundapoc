@@ -18,6 +18,7 @@ open class CountdownTask(
     override fun execute(execution: DelegateExecution) {
         logger.info("CountdownTask ${execution.businessKey}")
         countDownLatch.countDown()
+        logger.info("Lasting ${countDownLatch.count}")
     }
 
 }
