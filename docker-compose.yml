@@ -1,0 +1,11 @@
+version: '2'
+services:
+ postgres:
+   image: postgres:9.6
+   ports:
+     - "5432:5432"
+   environment:
+     - POSTGRES_DB=camunda_poc
+     - POSTGRES_USER=camunda_poc
+     - POSTGRES_PASSWORD=camunda_poc
+     - MAX_CONNECTIONS=300
