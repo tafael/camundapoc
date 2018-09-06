@@ -53,4 +53,18 @@ class Controller(
         }
     }
 
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    @RequestMapping(
+        "/kill/{businessKey}",
+        method = [(RequestMethod.POST)]
+    )
+    fun kill(
+        @PathVariable("businessKey") businessKey: String
+    ) {
+        runtimeService.deleteProcessInstancesAsync(
+           runtimeService.createProcessInstanceQuery()
+               .processInstanceBusinessKey(businessKey, "send_receive"),"dummy")
+    }
+
 }

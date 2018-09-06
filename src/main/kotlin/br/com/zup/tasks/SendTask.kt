@@ -21,8 +21,8 @@ open class SendTask(
     override fun execute(execution: DelegateExecution) {
         val businessKey = execution.getVariable("businessKey") as String
         if (sendTaskEnabled) {
-            logger.info("Send Task ${businessKey}")
             try {
+
                 runtimeService.correlateMessage("Message", businessKey)
                 logger.info("Message sent with SUCCESS")
             } catch (e: Exception) {
@@ -31,7 +31,14 @@ open class SendTask(
             }
         } else {
             logger.info("Send Task disabled.")
+            logger.info("Send Task ${businessKey}")
+            logger.info("MAX_VALUE " +  Long.MAX_VALUE)
+            for (i in 0L .. 60L) {
+                Thread.sleep(1000)
+                logger.info("Slepp " + i)
+            }
         }
+
 
     }
 }
